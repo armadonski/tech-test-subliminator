@@ -1,0 +1,17 @@
+services:
+  php:
+    build:
+      context: ./php
+      args:
+        PHP_VERSION: "8.2.1-fpm-alpine3.17"
+    expose:
+      - 9000
+    volumes:
+      - ../backend:/var/www/subliminator
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        NGINX_VERSION: "1.23.3"
+    ports:
+      - 80:80
