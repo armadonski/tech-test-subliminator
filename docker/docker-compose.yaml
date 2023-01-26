@@ -13,9 +13,6 @@ services:
       - 3306
     ports:
       - 3306:3306
-    volumes:
-      - ../data/:/var/lib/mysql/
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sq
   php:
     build:
       context: ./php
