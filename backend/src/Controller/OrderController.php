@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     #[Route(
-        '/',
+        'api/get-orders',
         name: 'order_list',
         requirements: ['page' => '\d+', 'noOfItems' => '\d+'],
         methods: ['GET']
@@ -34,8 +34,11 @@ class OrderController extends AbstractController
         $total = $paginator->count();
         $lastPage = (int)ceil($paginator->count() / $paginator->getQuery()->getMaxResults());
         $items = $paginator;
+        $response = new JsonResponse($items->getQuery()->getArrayResult());
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
-        return new JsonResponse($items->getQuery()->getArrayResult());
+        return $response;
     }
 
     public function cancelOrder()
