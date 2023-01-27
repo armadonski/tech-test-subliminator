@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\OrderImportService;
-use Doctrine\DBAL\Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 #[AsCommand(
     name: 'app:import-orders',
@@ -30,8 +30,10 @@ class ImportOrdersCommand extends Command
     {
         try {
             $this->importOrderService->handle();
-        } catch (Exception $exception) {
-            throw  $exception;
+        } catch (Throwable $t) {
+            $output->writeln($t->getMessage());
+
+            return Command::FAILURE;
         }
 
         return Command::SUCCESS;

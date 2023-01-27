@@ -5,69 +5,82 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Order;
-use DateTime;
+use App\Exception\InvalidItemException;
+use App\Validator\OrderImportValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\AnsiQuoteStrategy;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Exception;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use JsonException;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class OrderImportService
 {
+    public const DIR_NAME = 'orderFiles';
+
+    private FileFinderInterface $fileFinder;
+    private OrderImportValidator $validator;
     private EntityManagerInterface $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        FileFinderInterface $fileFinder,
+        OrderImportValidator $validator,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->fileFinder = $fileFinder;
+        $this->validator = $validator;
         $this->entityManager = $entityManager;
     }
 
     /**
      * @throws JsonException
-     * @throws Exception
+     * @throws InvalidItemException
      */
-    public function handle()
+    public function handle(): void
     {
-        $finder = new Finder();
-        $finder
-            ->files()
-            ->name('*.json')
-            ->in('orderFiles');
+        $nameConverter = new CamelCaseToSnakeCaseNameConverter();
+        $normalizer = new ObjectNormalizer(
+            null,
+            $nameConverter
+        );
 
-        foreach ($finder as $file) {
-            $fileContents = json_decode($file->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $serializer = new Serializer(
+            [$normalizer, new GetSetMethodNormalizer(), new ArrayDenormalizer()],
+            [new JsonEncoder()]
+        );
 
-            foreach ($fileContents as $item) {
-                $order = (new Order())
-                    ->setId($item['id'])
-                    ->setDate(new DateTime($item['date']))
-                    ->setCustomer($item['customer'])
-                    ->setAddress($item['address1'])
-                    ->setCity($item['city'])
-                    ->setPostcode($item['postcode'])
-                    ->setCountry($item['country'])
-                    ->setAmount($item['amount'])
-                    ->setStatus($item['status'])
-                    ->setDeleted($item['deleted'])
-                    ->setLastModified(new DateTime($item['last_modified']));
+        $files = $this->fileFinder->findJsonFiles(self::DIR_NAME);
+
+        foreach ($files as $file) {
+            $fileContents = $file->getContents();
+            $deserializedOrders = $serializer->deserialize(
+                $fileContents,
+                'App\Dto\OrderImportItemDto[]',
+                'json'
+            );
+
+            $this->validator->validateContents($deserializedOrders);
+
+            $this->entityManager->beginTransaction();
+
+            foreach ($deserializedOrders as $order) {
+                $order = (new Order())->setDataFromDto($order);
 
                 $this->entityManager->persist($order);
 
                 $metadata = $this->entityManager->getClassMetaData(get_class($order));
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new AssignedGenerator());
             }
-            try {
-                $this->entityManager->flush();
-            } catch (Exception $e) {
-                var_dump($e->getMessage());
-                die;
-            }
 
+            $this->entityManager->flush();
+            $this->entityManager->commit();
         }
     }
 }

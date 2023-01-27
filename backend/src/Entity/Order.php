@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Dto\OrderImportItemDto;
 use App\Repository\OrderRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,18 +48,11 @@ class Order
     #[ORM\Column(name: 'last_modified', type: 'datetime', columnDefinition: "DATETIME on update CURRENT_TIMESTAMP")]
     private DateTime $lastModified;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return Order
-     */
     public function setId(int $id): Order
     {
         $this->id = $id;
@@ -66,18 +60,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getDate(): DateTime
     {
         return $this->date;
     }
 
-    /**
-     * @param DateTime $date
-     * @return Order
-     */
     public function setDate(DateTime $date): Order
     {
         $this->date = $date;
@@ -85,18 +72,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCustomer(): string
     {
         return $this->customer;
     }
 
-    /**
-     * @param string $customer
-     * @return Order
-     */
     public function setCustomer(string $customer): Order
     {
         $this->customer = $customer;
@@ -104,18 +84,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress(): string
     {
         return $this->address;
     }
 
-    /**
-     * @param string $address
-     * @return Order
-     */
     public function setAddress(string $address): Order
     {
         $this->address = $address;
@@ -123,18 +96,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCity(): string
     {
         return $this->city;
     }
 
-    /**
-     * @param string $city
-     * @return Order
-     */
     public function setCity(string $city): Order
     {
         $this->city = $city;
@@ -142,18 +108,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPostcode(): string
     {
         return $this->postcode;
     }
 
-    /**
-     * @param string $postcode
-     * @return Order
-     */
     public function setPostcode(string $postcode): Order
     {
         $this->postcode = $postcode;
@@ -161,18 +120,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCountry(): string
     {
         return $this->country;
     }
 
-    /**
-     * @param string $country
-     * @return Order
-     */
     public function setCountry(string $country): Order
     {
         $this->country = $country;
@@ -180,18 +132,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getAmount(): int
     {
         return $this->amount;
     }
 
-    /**
-     * @param int $amount
-     * @return Order
-     */
     public function setAmount(int $amount): Order
     {
         $this->amount = $amount;
@@ -199,18 +144,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     * @return Order
-     */
     public function setStatus(string $status): Order
     {
         $this->status = $status;
@@ -218,18 +156,11 @@ class Order
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDeleted(): string
     {
         return $this->deleted;
     }
 
-    /**
-     * @param string $deleted
-     * @return Order
-     */
     public function setDeleted(string $deleted): Order
     {
         $this->deleted = $deleted;
@@ -237,21 +168,31 @@ class Order
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getLastModified(): DateTime
     {
         return $this->lastModified;
     }
 
-    /**
-     * @param DateTime $lastModified
-     * @return Order
-     */
     public function setLastModified(DateTime $lastModified): Order
     {
         $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function setDataFromDto(OrderImportItemDto $dto): self
+    {
+        $this->id = $dto->getId();
+        $this->date = new DateTime($dto->getDate());
+        $this->customer = $dto->getCustomer();
+        $this->address = $dto->getAddress1();
+        $this->city = $dto->getCity();
+        $this->postcode = $dto->getPostcode();
+        $this->country = $dto->getCountry();
+        $this->amount = $dto->getAmount();
+        $this->status = $dto->getStatus();
+        $this->deleted = $dto->getDeleted();
+        $this->lastModified = new DateTime($dto->getLastModified());
 
         return $this;
     }
