@@ -26,7 +26,7 @@ class ImportOrdersCommand extends Command
         $this->importOrderService = $importOrderService;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $this->importOrderService->handle();
