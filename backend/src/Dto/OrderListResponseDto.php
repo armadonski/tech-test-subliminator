@@ -8,8 +8,8 @@ class OrderListResponseDto
 {
     private array $result = [];
     private array $items = [];
-    private int $total;
-    private int $lastPage;
+    private ?int $total = null;
+    private ?int $lastPage = null;
     private array $errors = [];
 
     public function getResult(): array
@@ -74,12 +74,13 @@ class OrderListResponseDto
 
     public function serialize(): array
     {
+
+        $result['items'] = $this->items ?: [];
+        $result['total'] = $this->total ?: 0;
+        $result['lastPage'] = $this->lastPage ?: 0;
+
         return [
-            'result' => [
-                'items'    => $this->items,
-                'total'    => $this->total,
-                'lastPage' => $this->lastPage
-            ],
+            'result' => $result,
             'errors' => $this->errors
         ];
     }
