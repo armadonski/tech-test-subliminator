@@ -45,9 +45,4 @@ class OrderImportValidator
             }
         }
     }
-
-    public function validateExistingItems()
-    {
-
-    }
 }
