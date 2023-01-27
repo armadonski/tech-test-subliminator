@@ -18,10 +18,10 @@ services:
       context: ./php
       args:
         PHP_VERSION: 8.2.1-fpm-alpine3.17
-    expose:
-      - 9000
     volumes:
       - ../backend:/var/www/subliminator
+    expose:
+      - 9000
   nginx:
     build:
       context: ./nginx
@@ -38,5 +38,3 @@ services:
       - ../frontend:/app
     expose:
       - 4200
-    ports:
-      - 4200:4200
