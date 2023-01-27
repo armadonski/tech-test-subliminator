@@ -4,41 +4,33 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\OrderFetcher;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use App\Dto\OrderRequestDto;
+use App\Service\OrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+#[Route('/api/order', name: 'order_controller')]
 class OrderController extends AbstractController
 {
     #[Route(
-        'api/get-orders',
+        '/get',
         name: 'order_list',
-        requirements: ['page' => '\d+', 'noOfItems' => '\d+'],
+        requirements: ['page' => '\d+', 'items' => '\d+'],
         methods: ['GET']
     )
     ]
-    public function getOrder(Request $request, OrderFetcher $orderFetcher): JsonResponse
-    {
-        $page = $request->query->getInt('page');
-        $noOfItems = $request->query->getInt('noOfItems');
-
-        $query = $orderFetcher->get($page, $noOfItems);
-        $firstResult = $noOfItems * ($page - 1);
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($noOfItems);
-        $total = $paginator->count();
-        $lastPage = (int)ceil($paginator->count() / $paginator->getQuery()->getMaxResults());
-        $items = $paginator;
-        $response = new JsonResponse($items->getQuery()->getArrayResult());
-        $response->headers->set('Content-Type', 'application/json');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
-
-        return $response;
+    #[ParamConverter(
+        'request',
+        class: OrderRequestDto::class
+    )
+    ]
+    public function getOrderList(
+        OrderRequestDto $request,
+        OrderService $orderService
+    ): JsonResponse {
+        return $orderService->get($request);
     }
 
     public function cancelOrder()

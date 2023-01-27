@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class OrderRepository extends ServiceEntityRepository
@@ -15,11 +16,11 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    public function get($page = 1, $items = 10)
+    public function get($page = 1, $items = 10): QueryBuilder
     {
-        $qb = $this->createQueryBuilder('o')
-            ->orderBy('o.id', 'desc');
-
-        return $qb;
+        return $this->createQueryBuilder('o')
+            ->where('o.deleted != :deletedStatus')
+            ->orderBy('o.id', 'desc')
+            ->setParameter('deletedStatus', 'No');
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\ImportOrderService;
+use App\Service\OrderImportService;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -18,9 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class ImportOrdersCommand extends Command
 {
-    private ImportOrderService $importOrderService;
+    private OrderImportService $importOrderService;
 
-    public function __construct(ImportOrderService $importOrderService)
+    public function __construct(OrderImportService $importOrderService)
     {
         parent::__construct();
         $this->importOrderService = $importOrderService;

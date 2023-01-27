@@ -14,7 +14,7 @@ use Exception;
 use JsonException;
 use Symfony\Component\Finder\Finder;
 
-class ImportOrderService
+class OrderImportService
 {
     private EntityManagerInterface $entityManager;
 
