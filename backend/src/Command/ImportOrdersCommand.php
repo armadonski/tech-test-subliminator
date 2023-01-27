@@ -36,6 +36,8 @@ class ImportOrdersCommand extends Command
             return Command::FAILURE;
         }
 
+        $output->writeln('Import finished with success');
+
         return Command::SUCCESS;
     }
 }
