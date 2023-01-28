@@ -14,14 +14,14 @@ class JsonFileFinderService implements FileFinderInterface
      */
     public function findJsonFiles(string $dirName): Finder
     {
-        $finder = (new Finder());
+        $finder = new Finder();
         $finder
             ->files()
             ->name('*.json')
             ->in($dirName);
 
         if (0 === $finder->count()) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException;
         }
 
         return $finder;

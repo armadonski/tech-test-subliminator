@@ -12,15 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderService
 {
-    private OrderRequestValidator $validator;
-    private OrderFetcherInterface $orderFetcher;
 
     public function __construct(
-        OrderRequestValidator $validator,
-        OrderFetcherInterface $orderFetcher
+        private readonly OrderRequestValidator $validator,
+        private readonly OrderFetcherInterface $orderFetcher
     ) {
-        $this->validator = $validator;
-        $this->orderFetcher = $orderFetcher;
     }
 
     public function get(OrderRequestDto $request): JsonResponse

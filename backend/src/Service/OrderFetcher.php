@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\OrderRepository;
+use App\Repository\OrderRepositoryInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class OrderFetcher implements OrderFetcherInterface
 {
-    private OrderRepository $orderRepository;
-
-    /**
-     * @param OrderRepository $orderRepository
-     */
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(private readonly OrderRepositoryInterface $orderRepository)
     {
-        $this->orderRepository = $orderRepository;
     }
 
     public function getPaginated($page = 1, $items = 10): array
@@ -35,9 +29,7 @@ class OrderFetcher implements OrderFetcherInterface
                 ->getMaxResults());
 
         return [
-            $paginator
-                ->getQuery()
-                ->getArrayResult(),
+            $paginator->getQuery()->getArrayResult(),
             $total,
             $lastPage
         ];

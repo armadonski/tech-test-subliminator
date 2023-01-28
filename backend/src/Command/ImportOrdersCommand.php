@@ -18,26 +18,25 @@ use Throwable;
 )]
 class ImportOrdersCommand extends Command
 {
-    private OrderImportService $importOrderService;
-
-    public function __construct(OrderImportService $importOrderService)
+    public function __construct(private readonly OrderImportService $importOrderService)
     {
         parent::__construct();
-        $this->importOrderService = $importOrderService;
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $response = Command::SUCCESS;
+
         try {
             $this->importOrderService->handle();
+
+            $output->writeln('Import finished with success');
         } catch (Throwable $t) {
             $output->writeln($t->getMessage());
 
-            return Command::FAILURE;
+            $response = Command::FAILURE;
         }
 
-        $output->writeln('Import finished with success');
-
-        return Command::SUCCESS;
+        return $response;
     }
 }

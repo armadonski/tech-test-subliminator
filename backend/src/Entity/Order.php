@@ -179,21 +179,4 @@ class Order
 
         return $this;
     }
-
-    public function setDataFromDto(OrderImportItemDto $dto): self
-    {
-        $this->id = $dto->getId();
-        $this->date = new DateTime($dto->getDate());
-        $this->customer = $dto->getCustomer();
-        $this->address = $dto->getAddress1();
-        $this->city = $dto->getCity();
-        $this->postcode = $dto->getPostcode();
-        $this->country = $dto->getCountry();
-        $this->amount = $dto->getAmount();
-        $this->status = $dto->getStatus();
-        $this->deleted = $dto->getDeleted();
-        $this->lastModified = new DateTime($dto->getLastModified());
-
-        return $this;
-    }
 }
