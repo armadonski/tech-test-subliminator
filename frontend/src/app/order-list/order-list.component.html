@@ -60,19 +60,22 @@
 
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef>Actions</th>
-    <td mat-cell *matCellDef="let item">delete</td>
+    <td mat-cell *matCellDef="let item">
+      <div *ngIf="item.status == 'pending'; else noAction">Delete</div>
+      <ng-template #noAction>No actions</ng-template>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
   <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
 </table>
-  <mat-paginator
-    (page)="handlePageEvent($event)"
-    [length]="total"
-    [pageSize]="pageSize"
-    [showFirstLastButtons]="showFirstLastButtons"
-    [pageSizeOptions]="pageSizeOptions"
-    [pageIndex]="0"
-    aria-label="Select page"
-  >
-  </mat-paginator>
+<mat-paginator
+  (page)="handlePageEvent($event)"
+  [length]="total"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="showFirstLastButtons"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="0"
+  aria-label="Select page"
+>
+</mat-paginator>
