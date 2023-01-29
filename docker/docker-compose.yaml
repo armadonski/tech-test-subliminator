@@ -33,7 +33,7 @@ services:
     build:
       context: ./node
       args:
-        NODE_VERSION: 19.5.0-alpine3.16
+        NODE_VERSION: 19-alpine3.16
     volumes:
       - ../frontend:/app
     expose:

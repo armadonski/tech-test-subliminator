@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
-import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [AppComponent, OrderListComponent],
@@ -19,7 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
     BrowserAnimationsModule,
     MatTableModule,
     MatCardModule,
-    MatSelectModule
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent, OrderListComponent],
