@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Dto\OrderImportItemDto;
 use App\Repository\OrderRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'orders')]
 class Order
 {
+    public const STATUS_CANCELED = 'cancelled';
+    public const STATUS_PENDING = 'pending';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

@@ -8,6 +8,7 @@ use App\Dto\OrderRequestDto;
 use App\Service\OrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -33,8 +34,16 @@ class OrderController extends AbstractController
         return $orderService->get($request);
     }
 
-    public function cancelOrder()
-    {
-
+    #[Route(
+        '/{orderId<\d+>}/cancel',
+        name: 'order_cancel',
+        methods: ['PUT']
+    )
+    ]
+    public function cancelOrder(
+        int $orderId,
+        OrderService $orderService
+    ): JsonResponse {
+        return $orderService->cancel($orderId);
     }
 }

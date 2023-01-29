@@ -3,16 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OrderResponse } from './order-response';
 import { Order } from './order';
+import { CancelResponse } from './cancel-response';
 import moment from 'moment';
-
 @Component({
   selector: 'order-list',
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.css'],
 })
 export class OrderListComponent implements OnInit {
-  private ordersUrl = 'http://localhost/api/order/get';
-
   response: OrderResponse = {
     result: {
       items: [],
@@ -35,6 +33,9 @@ export class OrderListComponent implements OnInit {
   pageSizeOptions = [10, 25, 100];
 
   showFirstLastButtons = true;
+  currentPage = 1;
+
+  config: any;
 
   columnsToDisplay = [
     'id',
@@ -63,8 +64,9 @@ export class OrderListComponent implements OnInit {
   ): Observable<OrderResponse> {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('page', page).append('items', noOfItems);
+    const listUrl = 'http://localhost/api/order/get';
 
-    return this.http.get<OrderResponse>(this.ordersUrl, {
+    return this.http.get<OrderResponse>(listUrl, {
       params: queryParams,
     });
   }
@@ -74,9 +76,13 @@ export class OrderListComponent implements OnInit {
   }
 
   handlePageEvent(e: any) {
-    this.getOrders(e.pageIndex + 1, e.pageSize).subscribe((data) =>
-      this.setResponseData(data)
-    );
+    this.getOrders(e.pageIndex + 1, e.pageSize).subscribe((data) => {
+      const response = this.setResponseData(data);
+      this.currentPage = e.pageIndex + 1;
+      this.pageSize = e.pageSize;
+
+      return response;
+    });
   }
 
   setResponseData(data: OrderResponse) {
@@ -85,5 +91,13 @@ export class OrderListComponent implements OnInit {
     this.items = this.response.result.items;
     this.lastPage = this.response.result.lastPage;
     this.total = this.response.result.total;
+  }
+
+  cancelOrderHandler(id: number) {
+    const url = `http://localhost/api/order/${id}/cancel`;
+    console.log(url);
+
+    this.http.put<CancelResponse>(url, {});
+    this.getOrders(`${this.currentPage + 1}`, `${this.pageSize}`);
   }
 }

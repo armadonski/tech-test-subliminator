@@ -7,4 +7,6 @@ namespace App\Service;
 interface OrderFetcherInterface
 {
     public function getPaginated(int $page, int $items): array;
+
+    public function findById(int $orderId);
 }

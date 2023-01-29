@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Dto\OrderImportItemDto;
 use App\Entity\Order;
+use App\Exception\InvalidStatusException;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Id\AssignedGenerator;
@@ -71,5 +72,18 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
             ->setStatus($dto->getStatus())
             ->setDeleted($dto->getDeleted())
             ->setLastModified(new DateTime($dto->getLastModified()));
+    }
+
+    public function updateStatus(Order $order, string $status): void
+    {
+        if (Order::STATUS_PENDING !== $order->getStatus()) {
+            throw new InvalidStatusException();
+        }
+
+        $em = $this->getEntityManager();
+
+        $order->setStatus($status);
+        $em->persist($order);
+        $em->flush();
     }
 }

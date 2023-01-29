@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Order;
 use App\Repository\OrderRepositoryInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class OrderFetcher implements OrderFetcherInterface
@@ -33,5 +35,16 @@ class OrderFetcher implements OrderFetcherInterface
             $total,
             $lastPage
         ];
+    }
+
+    public function findById(int $orderId): Order
+    {
+        $order = $this->orderRepository->find($orderId);
+
+        if (null === $order) {
+            throw new EntityNotFoundException(sprintf('Order with id %s cannot be found', $orderId));
+        }
+
+        return $order;
     }
 }
