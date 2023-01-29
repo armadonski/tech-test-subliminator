@@ -1,5 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { OrderListComponent } from '../order-list.component';
+import { Component, Input} from '@angular/core';
 
 @Component({
   selector: 'cancel-item',

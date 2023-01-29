@@ -95,7 +95,6 @@ export class OrderListComponent implements OnInit {
 
   cancelOrderHandler(id: number) {
     const url = `http://localhost/api/order/${id}/cancel`;
-    console.log(url);
 
     this.http.put<CancelResponse>(url, {});
     this.getOrders(`${this.currentPage + 1}`, `${this.pageSize}`);
