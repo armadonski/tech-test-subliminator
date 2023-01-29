@@ -4,14 +4,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OrderListComponent } from './order-list/order-list.component';
+import { CancelItemComponent } from './order-list/actions/cancel-item.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [AppComponent, OrderListComponent],
+  declarations: [AppComponent, OrderListComponent, CancelItemComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -19,9 +22,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     BrowserAnimationsModule,
     MatTableModule,
     MatCardModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [],
-  bootstrap: [AppComponent, OrderListComponent],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

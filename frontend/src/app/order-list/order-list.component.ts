@@ -74,7 +74,6 @@ export class OrderListComponent implements OnInit {
   }
 
   handlePageEvent(e: any) {
-    console.log(e);
     this.getOrders(e.pageIndex + 1, e.pageSize).subscribe((data) =>
       this.setResponseData(data)
     );

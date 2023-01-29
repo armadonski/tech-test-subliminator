@@ -24,7 +24,7 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     public function get(): QueryBuilder
     {
         return $this->createQueryBuilder('o')
-            ->where('o.deleted != :deletedStatus')
+            ->where('o.deleted = :deletedStatus')
             ->orderBy('o.id', 'desc')
             ->setParameter('deletedStatus', 'No');
     }
