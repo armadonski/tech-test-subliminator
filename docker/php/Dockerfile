@@ -3,6 +3,9 @@ ARG PHP_VERSION
 FROM php:${PHP_VERSION} as php-fpm
 ENV TZ=Europe/Bucharest
 
+COPY wait-for-it.sh /usr/bin/wait-for-it
+RUN chmod +x /usr/bin/wait-for-it
+
 RUN apk update \
     && apk add \
         git \

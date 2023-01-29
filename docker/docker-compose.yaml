@@ -22,6 +22,8 @@ services:
       - ../backend:/var/www/subliminator
     expose:
       - 9000
+    links:
+      - database
   nginx:
     build:
       context: ./nginx
@@ -29,6 +31,10 @@ services:
         NGINX_VERSION: 1.23.3
     ports:
       - 80:80
+    links:
+      - node
+      - database
+      - php
   node:
     build:
       context: ./node
@@ -38,3 +44,5 @@ services:
       - ../frontend:/app
     expose:
       - 4200
+    links:
+      - php
