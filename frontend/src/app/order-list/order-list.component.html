@@ -62,10 +62,16 @@
     <th mat-header-cell *matHeaderCellDef>Actions</th>
     <td mat-cell *matCellDef="let item">
       <div *ngIf="item.status == 'pending'; else noAction">
-        <cancel-item
-          [action]="cancelOrderHandler"
-          [args]="item.id"
-        ></cancel-item>
+        <button
+          mat-mini-fab
+          color="warn"
+          aria-label="delete order"
+          type="button"
+          (click)="handleCancelOrder(item.id)"
+          clickable
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
       <ng-template #noAction>No actions</ng-template>
     </td>
