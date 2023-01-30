@@ -11,9 +11,9 @@ Requirements:
 4. Allow users to cancel an order (order.status = cancelled)
    An order can be cancelled only if has status="pending"
 
-How to start the application:
+# How to run the application:
 
-Clone the repository.
+*Clone the repository.
 
 * Install all dependencies. Docker - Make
 * run the command ``make start-development`` to start the application
