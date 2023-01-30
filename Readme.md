@@ -16,8 +16,8 @@ How to start the application:
 Clone the repository.
 
 * Install all dependencies. Docker - Make
-* run the command make ``start-development`` to start the application
+* run the command ``make start-development`` to start the application
 ** Wait until all containers are ready
 ** Node is the slowest. You can watch its progress by running ``docker logs -f docker-node-1``
-* run make stop-development to stop the application
-* run make import-orders to import orders
+* run `make stop-development` to stop the application
+* run `make import-orders` to import orders
