@@ -13,7 +13,7 @@ Requirements:
 
 # How to run the application:
 
-*Clone the repository.
+* Clone the repository.
 
 * Install all dependencies. Docker - Make
 * run the command ``make start-development`` to start the application
