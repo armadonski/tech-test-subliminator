@@ -6,6 +6,8 @@ WORKDIR /app
 
 RUN npm install -g @angular/cli \
     ;
+COPY entrypoint.sh /usr/bin/entrypoint
+RUN chmod +x /usr/bin/entrypoint
 
+ENTRYPOINT [ "entrypoint" ]
 EXPOSE 4200
-ENTRYPOINT ["ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--watch"]
